@@ -1,0 +1,29 @@
+version: "2"
+services:
+    php:
+        image: ambientum/php:7.4
+        volumes:
+            - ./:/var/www/app
+        # HACK
+        command: tail -f /dev/null
+        depends_on:
+            - db
+            - redis
+
+    db:
+        image: postgres:12
+        volumes:
+            - .watchcrunch/db/data:/var/lib/postgresql/data
+        ports:
+            - 5432
+        environment:
+            - POSTGRES_USER=watchcrunch
+            - POSTGRES_PASSWORD=watchcrunch
+            - POSTGRES_DB=watchcrunch
+
+    redis:
+        image: eqalpha/keydb:alpine_x86_64_v6.2.2
+        volumes:
+            - /data
+        ports:
+            - 6379
