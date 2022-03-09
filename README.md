@@ -44,7 +44,7 @@ In order to run the "script" every 7 days I decided to set up a new job `app/Job
 to run it every 7 days.
 
 My solution is located at App\Services\UserService.php, it's basically the sql query alongside keyset pagination to reduce 
-the load on the database and the memory footprint in PHP. There is also some thoughts regarding issues with heaving, 
+the load on the database and the memory footprint in PHP. There is also some thoughts regarding issues with having, 
 aliases and the SQL standard.
 
 Laravel Model Caching may come in handy to remove some of the database load, specially in queries that run a lot and 
