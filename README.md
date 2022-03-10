@@ -78,7 +78,10 @@ During local testing, with 1000 users and 20000 posts it yields the following nu
 }
 ```
 
-Most of the explain nodes shows use of indexes, so it's a fairly optimized query indeed.
+Most of the explain nodes shows use of indexes, looks like a very optimized query.
+
+> Performance may be improved by issuing a `VACUUM` command for users and posts, since thousands of rows have been added 
+and the [visibility maps](https://www.postgresql.org/docs/12/storage-vm.html) may need updates. Haven't test that.
 
 ## Final Considerations
 
