@@ -80,7 +80,7 @@ During local testing, with 1000 users and 20000 posts it yields the following nu
 
 Most of the explain nodes shows use of indexes, looks like a very optimized query.
 
-> Performance may be improved by issuing a `VACUUM` command for users and posts, since thousands of rows have been added 
+> I saw some large numbers for Heap Fetches in the explain nodes, performance may be improved by issuing a `VACUUM` command for users and posts, since thousands of rows have been added 
 and the [visibility maps](https://www.postgresql.org/docs/12/storage-vm.html) may need updates. Haven't test that.
 
 Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
