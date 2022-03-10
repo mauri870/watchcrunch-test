@@ -55,7 +55,9 @@ Caching of the relations may be a bit tricky, sometimes the cache is not invalid
 Keydb is another life saver in heavy workloads, the single-threaded nature of Redis sometimes cause a bottleneck during
 high load or heavy use of lua scripts.
 
-I hope you all like my solution, thanks for the opportunity.
+I always try to come up with a simple yet functional solution to problems first, test and benchmark it and elaborate further based on that, most of the times premature optimization is the root of all evil (or at least most of it) in programming. 
+
+Hope you all like my solution, thanks for the opportunity.
 
 Best,
 
