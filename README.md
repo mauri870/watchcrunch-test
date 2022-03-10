@@ -70,11 +70,11 @@ public function explainAnalyze(Builder $builder)
 During local testing, with 1000 users and 20000 posts it yields the following numbers:
 
 ```txt
-21 => {#9512
-  +"QUERY PLAN": "Planning Time: 0.199 ms"
+17 => {#9514
+  +"QUERY PLAN": "Planning Time: 0.093 ms"
 }
-22 => {#9511
-  +"QUERY PLAN": "Execution Time: 8.410 ms"
+18 => {#9512
+  +"QUERY PLAN": "Execution Time: 5.608 ms"
 }
 ```
 

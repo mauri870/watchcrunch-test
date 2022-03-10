@@ -16,6 +16,7 @@ class AddCreatedAtAndUserIdIndexToPostsTable extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->index('created_at');
             $table->index('user_id');
+            $table->index(['user_id', 'created_at']);
         });
     }
 
@@ -29,6 +30,7 @@ class AddCreatedAtAndUserIdIndexToPostsTable extends Migration
         Schema::table('posts', function (Blueprint $table) {
             $table->dropIndex('posts_created_at_index');
             $table->dropIndex('posts_user_id_index');
+            $table->dropIndex('posts_user_id_created_at_index');
         });
     }
 }
