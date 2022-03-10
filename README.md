@@ -47,6 +47,41 @@ My solution is located at App\Services\UserService.php, it's basically the sql q
 the load on the database and the memory footprint in PHP. There is also some thoughts regarding issues with having, 
 aliases and the SQL standard.
 
+By using a custom helper `explainAnalyze` we can test out the planning and execution time of such query:
+
+```php
+/**
+ * Explains and analyze the query.
+ *
+ * @return \Illuminate\Support\Collection
+ */
+public function explainAnalyze(Builder $builder)
+{
+    $sql = $builder->toSql();
+
+    $bindings = $builder->getBindings();
+
+    $explanation = $builder->getConnection()->select('EXPLAIN ANALYZE '.$sql, $bindings);
+
+    return new Collection($explanation);
+}
+```
+
+During local testing, with 1000 users and 20000 posts it yields the following numbers:
+
+```txt
+21 => {#9512
+  +"QUERY PLAN": "Planning Time: 0.199 ms"
+}
+22 => {#9511
+  +"QUERY PLAN": "Execution Time: 8.410 ms"
+}
+```
+
+Most of the explain nodes shows use of indexes, so it's a fairly optimized query indeed.
+
+## Final Considerations
+
 Laravel Model Caching may come in handy to remove some of the database load, specially in queries that run a lot and 
 don't change often, I used it in some projects with great results.
     https://github.com/GeneaLabs/laravel-model-caching
