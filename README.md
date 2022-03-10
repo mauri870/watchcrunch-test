@@ -43,9 +43,7 @@ docker-compose exec php bash
 In order to run the "script" every 7 days I decided to set up a new job `app/Jobs/AggregateTopUsersData.php` and schedule 
 to run it every 7 days.
 
-My solution is located at App\Services\UserService.php, it's basically the sql query alongside keyset pagination to reduce 
-the load on the database and the memory footprint in PHP. There is also some thoughts regarding issues with having, 
-aliases and the SQL standard.
+My solution is located at App\Services\UserService.php.
 
 By using a custom helper `explainAnalyze` we can test out the planning and execution time of such query:
 
