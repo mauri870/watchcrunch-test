@@ -83,6 +83,9 @@ Most of the explain nodes shows use of indexes, looks like a very optimized quer
 > Performance may be improved by issuing a `VACUUM` command for users and posts, since thousands of rows have been added 
 and the [visibility maps](https://www.postgresql.org/docs/12/storage-vm.html) may need updates. Haven't test that.
 
+Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
+individual database queries. I have decided to stick with the foremost solution.
+
 ## Final Considerations
 
 Laravel Model Caching may come in handy to remove some of the database load, specially in queries that run a lot and 
