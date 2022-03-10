@@ -89,16 +89,16 @@ individual database queries. I have decided to stick with the foremost solution.
 Another SQL query that use left join could be written as:
 
 ```sql
-SELECT u.username,
-	COUNT(p.user_id) as postsCount,
-	(SELECT title
-        	FROM posts
-        	WHERE user_id = u.id
-        	ORDER BY id DESC
-        FETCH FIRST 1 ROW ONLY
-    ) as latestPostTitle
+SELECT u.id, u.username,
+       COUNT(p.user_id) as postsCount,
+       (SELECT title
+            FROM posts
+            WHERE user_id = u.id
+            ORDER BY id DESC
+            FETCH FIRST 1 ROW ONLY
+       ) as latestPostTitle
 FROM users u
-LEFT JOIN posts p on u.id = p.user_id
+         LEFT JOIN posts p on u.id = p.user_id
 WHERE p.created_at between ? and current_timestamp
 GROUP BY u.id
 ```
@@ -109,15 +109,15 @@ Or in the Eloquent fluent builder:
 $this->query()
     ->leftJoin('posts as p', 'p.user_id', '=', 'u.id')
     ->from('users as u')
-    ->select(['username', DB::raw('COUNT(p.user_id) as postsCount')])
+    ->select(['u.id', 'username', DB::raw('COUNT(p.user_id) as posts_count')])
     ->selectSub(function($q) {
         $q->select('title')
             ->from('posts')
-            ->whereRaw('user_id = u.id')
-            ->orderByDesc('id')
+            ->whereColumn('user_id', '=', 'u.id')
+            ->orderByDesc('posts.id')
             ->limit(1);
-    }, 'latestPostTitle')
-    ->whereBetween('p.created_at', [Carbon::now()->subDays(7), Carbon::now()])
+    }, 'last_post_title')
+    ->whereBetween('p.created_at', [$since, Carbon::now()])
     ->groupBy('u.id');
 ```
 
