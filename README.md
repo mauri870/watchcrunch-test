@@ -103,6 +103,24 @@ WHERE p.created_at between ? and current_timestamp
 GROUP BY u.id
 ```
 
+Or in the Eloquent fluent builder:
+
+```php
+$this->query()
+    ->leftJoin('posts as p', 'p.user_id', '=', 'u.id')
+    ->from('users as u')
+    ->select(['username', DB::raw('COUNT(p.user_id) as postsCount')])
+    ->selectSub(function($q) {
+        $q->select('title')
+            ->from('posts')
+            ->whereRaw('user_id = u.id')
+            ->orderByDesc('id')
+            ->limit(1);
+    }, 'latestPostTitle')
+    ->whereBetween('p.created_at', [Carbon::now()->subDays(7), Carbon::now()])
+    ->groupBy('u.id');
+```
+
 ## Final Considerations
 
 Laravel Model Caching may come in handy to remove some of the database load, specially in queries that run a lot and 
