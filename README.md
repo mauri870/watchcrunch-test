@@ -83,43 +83,25 @@ Most of the explain nodes shows use of indexes, looks like a very optimized quer
 > I saw some large numbers for Heap Fetches in the explain nodes, performance may be improved by issuing a `VACUUM` command for users and posts, since thousands of rows have been added 
 and the [visibility maps](https://www.postgresql.org/docs/12/storage-vm.html) may need updates. Haven't tested that.
 
-Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
-individual database queries. I have decided to stick with the foremost solution.
-
-Another SQL query that use left join could be written as:
+The query in SQL notation:
 
 ```sql
 SELECT u.id, u.username,
-       COUNT(p.user_id) as postsCount,
-       (SELECT title
-            FROM posts
-            WHERE user_id = u.id
-            ORDER BY id DESC
-            FETCH FIRST 1 ROW ONLY
-       ) as latestPostTitle
+COUNT(p.user_id) as postsCount,
+    (SELECT title
+    FROM posts
+    WHERE user_id = u.id
+    ORDER BY id DESC
+    FETCH FIRST 1 ROW ONLY
+    ) as latestPostTitle
 FROM users u
-         LEFT JOIN posts p on u.id = p.user_id
+LEFT JOIN posts p on u.id = p.user_id
 WHERE p.created_at between ? and current_timestamp
 GROUP BY u.id
 ```
 
-Or in the Eloquent fluent builder:
-
-```php
-$this->query()
-    ->leftJoin('posts as p', 'p.user_id', '=', 'u.id')
-    ->from('users as u')
-    ->select(['u.id', 'username', DB::raw('COUNT(p.user_id) as posts_count')])
-    ->selectSub(function($q) {
-        $q->select('title')
-            ->from('posts')
-            ->whereColumn('user_id', '=', 'u.id')
-            ->orderByDesc('posts.id')
-            ->limit(1);
-    }, 'last_post_title')
-    ->whereBetween('p.created_at', [$since, Carbon::now()])
-    ->groupBy('u.id');
-```
+Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
+individual database queries. I have decided to stick with the foremost solution.
 
 ## Final Considerations
 
