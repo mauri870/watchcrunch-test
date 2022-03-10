@@ -26,7 +26,7 @@ class UserService {
             }, 'last_post_title')
             ->whereBetween('p.created_at', [$since, Carbon::now()])
             ->groupBy('u.id')
-            ->having(DB::raw('COUNT(p.id)'),  '>', $minPosts);
+            ->having(DB::raw('COUNT(p.user_id)'),  '>', $minPosts);
 
         return $query->get(['username', 'total_posts_count', 'last_post_title'])->toArray();
     }

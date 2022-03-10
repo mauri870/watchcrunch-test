@@ -96,7 +96,7 @@ FROM users u
 LEFT JOIN posts p on u.id = p.user_id
 WHERE p.created_at between ? and current_timestamp
 GROUP BY u.id
-HAVING COUNT(p.id) > ?
+HAVING COUNT(p.user_id) > ?
 ```
 
 Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
