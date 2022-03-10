@@ -12,7 +12,7 @@ class UserService {
         return User::query();
     }
 
-    public function topUsersSince(Carbon $since, int $minPosts = 10, int $chunkSize = 1000) : array {
+    public function topUsersSince(Carbon $since, int $minPosts = 10) : array {
         $query = $this->query()
             ->leftJoin('posts as p', 'p.user_id', '=', 'u.id')
             ->from('users as u')
@@ -25,7 +25,8 @@ class UserService {
                     ->limit(1);
             }, 'last_post_title')
             ->whereBetween('p.created_at', [$since, Carbon::now()])
-            ->groupBy('u.id');
+            ->groupBy('u.id')
+            ->having(DB::raw('COUNT(p.id)'),  '>', $minPosts);
 
         return $query->get(['username', 'total_posts_count', 'last_post_title'])->toArray();
     }

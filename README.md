@@ -87,15 +87,16 @@ The query in SQL notation:
 SELECT u.id, u.username,
 COUNT(p.user_id) as postsCount,
     (SELECT title
-    FROM posts
-    WHERE user_id = u.id
-    ORDER BY id DESC
-    FETCH FIRST 1 ROW ONLY
+        FROM posts
+        WHERE user_id = u.id
+        ORDER BY id DESC
+        FETCH FIRST 1 ROW ONLY
     ) as latestPostTitle
 FROM users u
 LEFT JOIN posts p on u.id = p.user_id
 WHERE p.created_at between ? and current_timestamp
 GROUP BY u.id
+HAVING COUNT(p.id) > ?
 ```
 
 Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
