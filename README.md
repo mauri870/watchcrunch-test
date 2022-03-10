@@ -24,6 +24,7 @@ docker-compose exec php bash
 $ composer install
 $ cp .env.example .env
 $ php artisan key:generate
+$ php artisan migrate
 ```
 
 I replaced redis with keydb which is multithreaded and is well suited for cloud environments but ended up not using it 
