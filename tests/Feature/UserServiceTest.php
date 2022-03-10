@@ -48,9 +48,10 @@ class UserServiceTest extends TestCase
         $user2 = User::factory()->create();
 
         $postsUser1 = Post::factory()->count(15)->create(['user_id' => $user1->id, 'created_at' => $sevenDaysAgo, 'updated_at' => $sevenDaysAgo]);
-        $postsUser2 = Post::factory()->count(20)->create(['user_id' => $user2->id, 'created_at' => $sevenDaysAgo, 'updated_at' => $sevenDaysAgo]);
+
         // let's also create some older posts
         Post::factory()->count(5)->create(['user_id' => $user2->id, 'created_at' => $tenDaysAgo, 'updated_at' => $tenDaysAgo]);
+        $postsUser2 = Post::factory()->count(20)->create(['user_id' => $user2->id, 'created_at' => $sevenDaysAgo, 'updated_at' => $sevenDaysAgo]);
 
         $data = $this->userService->topUsersSince($sevenDaysAgo, $minPosts);
         $this->assertCount(2, $data);

@@ -26,7 +26,7 @@ class UserService {
         // One of the solutions that I found was to simply use a subquery.
         // https://github.com/laravel/framework/issues/30184#issuecomment-538491118
         $postsCountQuery = $this->query()->withCount(['posts' => function ($q) use ($since) {
-            $q->where('created_at', '>=', $since);
+            $q->whereBetween('created_at', [$since, Carbon::now()]);
         }]);
 
         $users = $this->query()->fromSub($postsCountQuery, 'alias')
