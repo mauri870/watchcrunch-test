@@ -86,6 +86,23 @@ and the [visibility maps](https://www.postgresql.org/docs/12/storage-vm.html) ma
 Another solution that I was thinking about is to query for every user instead, but that would result in O(n) 
 individual database queries. I have decided to stick with the foremost solution.
 
+Another SQL query that use left join could be written as:
+
+```sql
+SELECT u.username,
+	COUNT(p.user_id) as postsCount,
+	(SELECT title
+        	FROM posts
+        	WHERE user_id = u.id
+        	ORDER BY id DESC
+        FETCH FIRST 1 ROW ONLY
+    ) as latestPostTitle
+FROM users u
+LEFT JOIN posts p on u.id = p.user_id
+WHERE p.created_at between ? and current_timestamp
+GROUP BY u.id
+```
+
 ## Final Considerations
 
 Laravel Model Caching may come in handy to remove some of the database load, specially in queries that run a lot and 
